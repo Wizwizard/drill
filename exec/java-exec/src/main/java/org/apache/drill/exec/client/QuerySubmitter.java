@@ -39,7 +39,10 @@ import com.google.common.base.Stopwatch;
 
 public class QuerySubmitter {
 
+  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(QuerySubmitter.class);
   public static void main(String args[]) throws Exception {
+      System.out.println("picasso: start client");
+
     QuerySubmitter submitter = new QuerySubmitter();
     Options o = new Options();
     JCommander jc = null;

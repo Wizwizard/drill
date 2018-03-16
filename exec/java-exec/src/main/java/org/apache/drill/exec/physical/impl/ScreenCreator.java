@@ -77,6 +77,7 @@ public class ScreenCreator implements RootCreator<Screen> {
     @Override
     public boolean innerNext() {
       IterOutcome outcome = next(incoming);
+
       logger.trace("Screen Outcome {}", outcome);
       switch (outcome) {
       case OUT_OF_MEMORY:

@@ -17,6 +17,8 @@
  */
 package org.apache.drill.exec.physical.impl.materialize;
 
+//import com.googlecode.protobuf.format.JsonFormat;
+import io.netty.buffer.DrillBuf;
 import org.apache.drill.exec.memory.BufferAllocator;
 import org.apache.drill.exec.ops.FragmentContext;
 import org.apache.drill.exec.ops.OperatorContext;
@@ -25,6 +27,10 @@ import org.apache.drill.exec.proto.UserBitShared.QueryData;
 import org.apache.drill.exec.record.BatchSchema;
 import org.apache.drill.exec.record.RecordBatch;
 import org.apache.drill.exec.record.WritableBatch;
+import org.apache.parquet.bytes.BytesUtils;
+
+import java.nio.charset.Charset;
+import java.util.Arrays;
 
 public class VectorRecordMaterializer implements RecordMaterializer{
   static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(VectorRecordMaterializer.class);
@@ -53,6 +59,12 @@ public class VectorRecordMaterializer implements RecordMaterializer{
         .setQueryId(queryId) //
         .setRowCount(batch.getRecordCount()) //
         .setDef(w.getDef()).build();
+//    String jsonFormat = JsonFormat.printToString(header);
+//    logger.info("picasso: convertNext: header: " + jsonFormat);
+//    for(DrillBuf d:w.getBuffers()){
+//      logger.info("picasso: convertNext: data: " + d.toString(Charset.forName("gbk")));
+//    }
+    //logger.info("picasso: convertNext: data: " + Arrays.toString(w.getBuffers()));
     QueryWritableBatch batch = new QueryWritableBatch(header, w.getBuffers());
     return batch;
   }

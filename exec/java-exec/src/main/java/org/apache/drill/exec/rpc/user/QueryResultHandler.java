@@ -303,6 +303,8 @@ public class QueryResultHandler {
         return;
       }
 
+      logger.info("picasso: SubmissionListener: success: queryId:" + queryId);
+
       resultsListener.queryIdArrived(queryId);
       if (logger.isDebugEnabled()) {
         logger.debug("Received QueryId {} successfully. Adding results listener {}.",

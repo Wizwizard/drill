@@ -24,14 +24,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.drill.exec.proto.UserBitShared.QueryData;
 
 public class QueryDataBatch {
-  // private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(QueryDataBatch.class);
+  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(QueryDataBatch.class);
 
   private final QueryData header;
   private final DrillBuf data;
   private final AtomicBoolean released = new AtomicBoolean(false);
 
   public QueryDataBatch(QueryData header, DrillBuf data) {
-    // logger.debug("New Result Batch with header {} and data {}", header, data);
+    logger.info("New Result Batch with header {} and data {}", header, data);
     this.header = header;
     this.data = data;
     if (this.data != null) {

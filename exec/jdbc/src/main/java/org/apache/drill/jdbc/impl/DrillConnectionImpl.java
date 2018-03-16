@@ -123,7 +123,7 @@ class DrillConnectionImpl extends AvaticaConnection
         }
 
         final DrillConfig dConfig = DrillConfig.create(info);
-//        logger.info("picasso: drillConfig:" + dConfig);
+        logger.info("picasso: drillConfig:" + dConfig);
         this.allocator = RootAllocatorFactory.newRoot(dConfig);
         RemoteServiceSet set = GlobalServiceSetReference.SETS.get();
         if (set == null) {

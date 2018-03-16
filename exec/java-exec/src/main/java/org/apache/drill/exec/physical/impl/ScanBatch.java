@@ -155,8 +155,19 @@ public class ScanBatch implements CloseableRecordBatch {
     }
   }
 
+  private static String getStackTrace(String methodName) {
+    StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
+    StringBuilder log = new StringBuilder(methodName);
+    if(stackTraceElements != null){
+      for(int i = 0; i < stackTraceElements.length; i ++){
+        log.append("\n" + stackTraceElements[i]);
+      }
+    }
+    return log.toString();
+  }
   @Override
   public IterOutcome next() {
+   // logger.info(getStackTrace("next()"));
     if (done) {
       return IterOutcome.NONE;
     }

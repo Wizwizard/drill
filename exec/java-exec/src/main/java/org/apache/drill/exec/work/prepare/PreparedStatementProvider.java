@@ -18,6 +18,7 @@
 package org.apache.drill.exec.work.prepare;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import org.apache.drill.common.exceptions.ErrorHelper;
@@ -25,6 +26,7 @@ import org.apache.drill.common.types.TypeProtos.DataMode;
 import org.apache.drill.common.types.TypeProtos.MajorType;
 import org.apache.drill.common.types.TypeProtos.MinorType;
 import org.apache.drill.common.types.Types;
+import org.apache.drill.exec.expand.SchemaResult;
 import org.apache.drill.exec.physical.impl.materialize.QueryWritableBatch;
 import org.apache.drill.exec.proto.ExecProtos.ServerPreparedStatementState;
 import org.apache.drill.exec.proto.GeneralRPCProtos.Ack;
@@ -261,6 +263,14 @@ public class PreparedStatementProvider {
       }
 
       listener.success(Acks.OK, null);
+    }
+
+    public void sendData() {
+        logger.info("picasso: sendData: ");
+    }
+
+    public void sendData(SchemaResult schemaResult) {
+      logger.info("picasso: sendData(schema)");
     }
 
     /**

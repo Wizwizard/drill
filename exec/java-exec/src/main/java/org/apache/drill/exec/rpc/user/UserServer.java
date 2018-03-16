@@ -29,6 +29,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.handler.ssl.SslHandler;
 import org.apache.drill.common.config.DrillProperties;
 import org.apache.drill.common.exceptions.DrillException;
+import org.apache.drill.exec.expand.SchemaResult;
 import org.apache.drill.exec.ssl.SSLConfig;
 import org.apache.drill.exec.exception.DrillbitStartupException;
 import org.apache.drill.exec.memory.BufferAllocator;
@@ -220,6 +221,14 @@ public class UserServer extends BasicServer<RpcType, BitToUserConnection> {
     public void sendData(final RpcOutcomeListener<Ack> listener, final QueryWritableBatch result) {
       logger.trace("Sending data to client with {}", result);
       send(listener, this, RpcType.QUERY_DATA, result.getHeader(), Ack.class, false, result.getBuffers());
+    }
+
+    public void sendData(){
+        logger.info("picasso: sendData");
+    }
+
+    public void sendData(SchemaResult schemaResult){
+      logger.info("picasso: sendData(schema)");
     }
 
     @Override

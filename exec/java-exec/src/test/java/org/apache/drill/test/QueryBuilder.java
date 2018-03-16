@@ -424,6 +424,7 @@ public class QueryBuilder {
    */
 
   public void withListener(UserResultsListener listener) {
+
     Preconditions.checkNotNull(queryType, "Query not provided.");
     Preconditions.checkNotNull(queryText, "Query not provided.");
     client.client().runQuery(queryType, queryText, listener);

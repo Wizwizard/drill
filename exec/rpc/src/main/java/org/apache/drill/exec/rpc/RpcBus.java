@@ -17,8 +17,11 @@
  */
 package org.apache.drill.exec.rpc;
 
+import java.nio.charset.Charset;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.DrillBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -115,6 +118,10 @@ public abstract class RpcBus<T extends EnumLite, C extends RemoteConnection> imp
 
       Preconditions.checkNotNull(protobufBody);
       ChannelListenerWithCoordinationId futureListener = connection.createNewRpcListener(listener, clazz);
+      //logger.info("picasso: send: dataBodies: " + Arrays.toString(dataBodies));
+//      for(ByteBuf d:dataBodies){
+//        logger.info("picasso: send: dataBodies: " + d.toString(Charset.forName("gbk")));
+//      }
       OutboundRpcMessage m = new OutboundRpcMessage(RpcMode.REQUEST, rpcType, futureListener.getCoordinationId(), protobufBody, dataBodies);
       ChannelFuture channelFuture = connection.getChannel().writeAndFlush(m);
       channelFuture.addListener(futureListener);
@@ -269,7 +276,7 @@ public abstract class RpcBus<T extends EnumLite, C extends RemoteConnection> imp
 
         switch (msg.mode) {
         case REQUEST: {
-          logger.debug("bingxing.wang: RpcBus.inboundHandler.dcode.request msg:" + msg);
+          logger.info("bingxing.wang: RpcBus.inboundHandler decode request rpcType: " + msg.rpcType);
           final ResponseSenderImpl sender = new ResponseSenderImpl(connection, msg.coordinationId);
           retainByteBuf(msg.pBody);
           retainByteBuf(msg.dBody);
@@ -288,13 +295,18 @@ public abstract class RpcBus<T extends EnumLite, C extends RemoteConnection> imp
           retainByteBuf(msg.pBody);
           retainByteBuf(msg.dBody);
           try {
-            logger.debug("bingxing.wang: RpcBus.inboundHandler.decode.response");
+            logger.info("bingxing.wang: RpcBus.inboundHandler.decode.response rpcType: " + msg.rpcType);
             final MessageLite defaultResponse = getResponseDefaultInstance(msg.rpcType);
             assert rpcConfig.checkReceive(msg.rpcType, defaultResponse.getClass());
             final RpcOutcome<?> rpcFuture = connection.getAndRemoveRpcOutcome(msg.rpcType, msg.coordinationId,
                 defaultResponse.getClass());
             final Parser<?> parser = defaultResponse.getParserForType();
             final Object value = parser.parseFrom(new ByteBufInputStream(msg.pBody, msg.pBody.readableBytes()));
+            //logger.info("picasso: decode: RESPONSE: msg.pBody:" + msg.pBody.toString(Charset.forName("utf-8")));
+            //logger.info("picasso: decode: RESPONSE: msg.dBody:" + msg.dBody.toString(Charset.forName("utf-8")));
+            //logger.info("picasso: decode: RESPONSE: msg.dBody:" + ByteBufUtil.decodeString(msg.dBody, 0, msg.dBody.readableBytes(), Charset.forName("utf-8")));
+
+
             rpcFuture.set(value, msg.dBody);
             if (RpcConstants.EXTRA_DEBUGGING) {
               logger.debug("Updated rpc future {} with value {}", rpcFuture, value);

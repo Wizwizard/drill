@@ -56,6 +56,7 @@ public class WritableBatch implements AutoCloseable {
     for (DrillBuf buf : buffers) {
       int writerIndex = buf.writerIndex();
       DrillBuf newBuf = buf.transferOwnership(allocator).buffer;
+
       newBuf.writerIndex(writerIndex);
       newBuffers.add(newBuf);
     }

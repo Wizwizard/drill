@@ -22,7 +22,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-      <title>Apache Drill</title>
+      <title>TouchPal Drill</title>
       <link rel="shortcut icon" href="/static/img/drill.ico">
 
       <link href="/static/css/bootstrap.min.css" rel="stylesheet">
@@ -31,6 +31,21 @@
       <script> window.jQuery  || document.write('<script type="text/javascript" language="javascript" src="../static/js/jquery-3.2.1.min.js">\x3C/script>')
       </script>
       <script src="/static/js/bootstrap.min.js"></script>
+          <script type="text/javascript">
+              window.onload = function()
+              {
+                if(window.location.port == '50007')
+                {
+                    $("#drill-title").text("TouchPal Drill(CN)");
+                } else if(window.location.port == '51007')
+                {
+                    $("#drill-title").text("TouchPal Drill(US)");
+                } else if(window.location.origin.search('localhost') > 0)
+                {
+                    $("#drill-title").text("TouchPal Drill(LOCAL)");
+                }
+              }
+          </script>
 
       <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
       <!--[if lt IE 9]>
@@ -52,7 +67,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Apache Drill</a>
+            <a id="drill-title" class="navbar-brand" href="/">TouchPal Drill</a>
           </div>
           <div class="navbar-collapse collapse">
             <#if showControls == true>

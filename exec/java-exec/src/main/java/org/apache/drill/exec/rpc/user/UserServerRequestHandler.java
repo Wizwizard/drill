@@ -58,7 +58,6 @@ class UserServerRequestHandler implements RequestHandler<BitToUserConnection> {
                      ResponseSender responseSender)
   throws RpcException {
     switch (rpcType) {
-
     case RpcType.RUN_QUERY_VALUE:
       logger.debug("Received query to run.  Returning query handle.");
       try {

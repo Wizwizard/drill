@@ -24,6 +24,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.DrillBuf;
 import io.netty.channel.ChannelFuture;
 import org.apache.drill.common.exceptions.UserException;
+import org.apache.drill.exec.expand.SchemaResult;
 import org.apache.drill.exec.memory.BufferAllocator;
 import org.apache.drill.exec.physical.impl.materialize.QueryWritableBatch;
 import org.apache.drill.exec.proto.GeneralRPCProtos.Ack;
@@ -85,7 +86,6 @@ public class WebUserConnection extends AbstractDisposableUserClientConnection im
       listener.success(Acks.OK, null);
       return;
     }
-
     // If here that means there is some data for sure. Create a ByteBuf with all the data in it.
     final int rows = result.getHeader().getRowCount();
     final BufferAllocator allocator = webSessionResources.getAllocator();
@@ -128,6 +128,31 @@ public class WebUserConnection extends AbstractDisposableUserClientConnection im
       listener.success(Acks.OK, null);
     }
   }
+
+  public void sendData() {
+    columns.add("COLUMN_NAME");
+    columns.add("DATA_TYPE");
+
+    Map<String, String> record;
+    record = Maps.newHashMap();
+    record.put("COLUMN_NAME", "name");
+    record.put("DATA_TYPE", "string");
+
+    results.add(record);
+
+    latch.countDown();
+
+  }
+
+  public void sendData(SchemaResult result) {
+    logger.info("picasso: sendData: columns:" + result.columns);
+    logger.info("picasso: sendData: result:" + result.results.toString());
+    columns.addAll(result.columns);
+    results.addAll(result.results);
+    latch.countDown();
+  }
+
+
 
   @Override
   public ChannelFuture getChannelClosureFuture() {

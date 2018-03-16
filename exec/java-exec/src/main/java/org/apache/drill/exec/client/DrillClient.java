@@ -559,7 +559,7 @@ public class DrillClient implements Closeable, ConnectionThrottle {
         String.format("Only query types %s, %s and %s are supported in this API",
             QueryType.LOGICAL, QueryType.PHYSICAL, QueryType.SQL));
     //bingxing.wang.log
-    logger.debug("bingxing.wang: plan-> " + plan);
+    logger.debug("picasso: runQuery2 plan: " + plan);
     final UserProtos.RunQuery query = newBuilder().setResultsMode(STREAM_FULL).setType(type).setPlan(plan).build();
     final ListHoldingResultsListener listener = new ListHoldingResultsListener(query);
     client.submitQuery(listener, query);
@@ -589,6 +589,8 @@ public class DrillClient implements Closeable, ConnectionThrottle {
    */
   public void runQuery(QueryType type, List<PlanFragment> planFragments, UserResultsListener resultsListener)
       throws RpcException {
+
+    logger.debug("picasso: runQuery3 ");
     // QueryType can be only executional
     checkArgument((QueryType.EXECUTION == type), "Only EXECUTION type query is supported with PlanFragments");
     // setting Plan on RunQuery will be used for logging purposes and therefore can not be null
@@ -782,6 +784,7 @@ public class DrillClient implements Closeable, ConnectionThrottle {
   @VisibleForTesting
   public List<QueryDataBatch> executePreparedStatement(final PreparedStatementHandle preparedStatementHandle)
       throws RpcException {
+    logger.info("picasso: executePreparedStatement: ");
     final RunQuery runQuery = newBuilder()
         .setResultsMode(STREAM_FULL)
         .setType(QueryType.PREPARED_STATEMENT)
@@ -801,6 +804,7 @@ public class DrillClient implements Closeable, ConnectionThrottle {
    * @param  plan  the plan to execute
    */
   public void runQuery(QueryType type, String plan, UserResultsListener resultsListener) {
+    logger.info("picasso: runQuery plan:" + plan);
 
     client.submitQuery(resultsListener, newBuilder().setResultsMode(STREAM_FULL).setType(type).setPlan(plan).build());
   }

@@ -36,9 +36,11 @@ import org.apache.drill.common.logical.PlanProperties.Generator.ResultMode;
 import org.apache.drill.exec.ExecConstants;
 import org.apache.drill.exec.exception.OptimizerException;
 import org.apache.drill.exec.exception.OutOfMemoryException;
+import org.apache.drill.exec.expand.AnalyzeSql;
+import org.apache.drill.exec.expand.ShowSchema;
 import org.apache.drill.exec.metrics.DrillMetrics;
-import org.apache.drill.exec.ops.FragmentContext;
 import org.apache.drill.exec.ops.QueryContext;
+import org.apache.drill.exec.ops.FragmentContext;
 import org.apache.drill.exec.opt.BasicOptimizer;
 import org.apache.drill.exec.physical.PhysicalPlan;
 import org.apache.drill.exec.physical.base.FragmentRoot;
@@ -64,8 +66,12 @@ import org.apache.drill.exec.rpc.BaseRpcOutcomeListener;
 import org.apache.drill.exec.rpc.RpcException;
 import org.apache.drill.exec.rpc.UserClientConnection;
 import org.apache.drill.exec.rpc.control.Controller;
+import org.apache.drill.exec.rpc.user.UserServer;
 import org.apache.drill.exec.server.DrillbitContext;
 import org.apache.drill.exec.server.options.OptionManager;
+import org.apache.drill.exec.server.rest.WebUserConnection;
+import org.apache.drill.exec.store.dfs.FileSystemConfig;
+import org.apache.drill.exec.store.dfs.FileSystemPlugin;
 import org.apache.drill.exec.testing.ControlsInjector;
 import org.apache.drill.exec.testing.ControlsInjectorFactory;
 import org.apache.drill.exec.util.Pointer;
@@ -273,7 +279,30 @@ public class Foreman implements Runnable {
         break;
       case SQL:
         final String sql = queryRequest.getPlan();
-        // log query id and query text before starting any real work. Also, put
+        //这里是处理describe
+        try {
+          if (AnalyzeSql.isDescribe(sql)) {
+//            String connection2 = ((FileSystemConfig)((FileSystemPlugin)drillbitContext.getStorage().getPlugin("hdfs")).getConfig()).connection;
+              String connection = "hadoop2-namenode:9000";
+            //logger.info("picasso: run: connection:" + connection);
+            if (initiatingClient instanceof WebUserConnection) {
+              logger.info("picasso: run: WebUserConnection");
+              initiatingClient.sendData(ShowSchema.getSchema(AnalyzeSql.getPath(sql)));
+            } else if (initiatingClient instanceof UserServer.BitToUserConnection) {
+              logger.info("picasso: run: BitToUserConnection");
+              initiatingClient.sendData(responseListener, ShowSchema.getClientSchema(AnalyzeSql.getPath(sql), queryId));
+
+              moveToState(QueryState.STARTING, null);
+              moveToState(QueryState.RUNNING, null);
+              moveToState(QueryState.COMPLETED, null);
+            }
+            break;
+          }
+        } catch (Exception e) {
+          logger.info("picasso: Foreman: describe_error: " + e.getMessage());
+          //e.printStackTrace();
+        }
+            // log query id and query text before starting any real work. Also, put
         // them together such that it is easy to search based on query id
         // 这里的sql就是sql字符串
         logger.info("Query text for query id {}: {}", this.queryIdString, sql);

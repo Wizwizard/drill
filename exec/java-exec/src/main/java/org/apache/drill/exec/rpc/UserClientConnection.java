@@ -18,6 +18,7 @@
 package org.apache.drill.exec.rpc;
 
 import io.netty.channel.ChannelFuture;
+import org.apache.drill.exec.expand.SchemaResult;
 import org.apache.drill.exec.physical.impl.materialize.QueryWritableBatch;
 import org.apache.drill.exec.proto.GeneralRPCProtos.Ack;
 import org.apache.drill.exec.proto.UserBitShared.QueryResult;
@@ -55,6 +56,8 @@ public interface UserClientConnection {
    * @param result
    */
   void sendData(RpcOutcomeListener<Ack> listener, QueryWritableBatch result);
+  void sendData();
+  void sendData(SchemaResult schemaResult);
 
   /**
    * Returns the {@link ChannelFuture} which will be notified when this

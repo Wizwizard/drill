@@ -26,7 +26,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * TODO: Need to update to use long for number of pending messages.
  */
-class SendingAccountor {
+// picasso 这里扩展了访问权限
+public class SendingAccountor {
   private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SendingAccountor.class);
 
   private final AtomicInteger batchesSent = new AtomicInteger(0);
