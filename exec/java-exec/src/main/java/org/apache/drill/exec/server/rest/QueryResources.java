@@ -217,7 +217,7 @@ public class QueryResources {
         // json格式的字符串
         msg = data;
         type = "success";
-        logger.info("picasso: getData:success msg:" + msg);
+        //logger.info("picasso: getData:success msg:" + msg);
       }
     } catch (InterruptedException e) {
         msg = e.getMessage();
@@ -251,7 +251,7 @@ public class QueryResources {
       username = "bingxing.wang";
     }
 
-    logger.info("picasso: setData: data:" + data);
+    //logger.info("picasso: setData: data:" + data);
 
     //logger.info("picasso: setData: sql:" + sql);
 

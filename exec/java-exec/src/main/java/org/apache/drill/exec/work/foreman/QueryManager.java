@@ -593,7 +593,7 @@ public class QueryManager implements AutoCloseable {
         logger.warn("Drillbits [{}] no longer registered in cluster.  Canceling query {}",
             failedNodeList, QueryIdHelper.getQueryId(queryId));
         foreman.addToEventQueue(QueryState.FAILED,
-            new ForemanException(String.format("One more more nodes lost connectivity during query.  Identified nodes were [%s].",
+            new ForemanException(String.format("One or more nodes lost connectivity during query.  Identified nodes were [%s].",
                 failedNodeList)));
       }
 

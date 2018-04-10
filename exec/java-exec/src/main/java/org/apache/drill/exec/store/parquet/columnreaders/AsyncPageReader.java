@@ -295,16 +295,16 @@ class AsyncPageReader extends PageReader {
     isClear = true;
     //Cancelling all existing AsyncPageReaderTasks
     while (asyncPageRead != null && !asyncPageRead.isEmpty()) {
-      logger.info("parquet_scan_pageData: clear: debugName:" + debugName + " asyncPageRead.size():" + asyncPageRead.size());
+      //logger.info("parquet_scan_pageData: clear: debugName:" + debugName + " asyncPageRead.size():" + asyncPageRead.size());
 
       try {
         Future<Void> f = asyncPageRead.poll();
         if(!f.isDone() && !f.isCancelled()){
           f.cancel(true);
-          logger.info("parquet_scan_pageData: clear: debugName: " + debugName + " f.cancel");
+         // logger.info("parquet_scan_pageData: clear: debugName: " + debugName + " f.cancel");
         } else {
           f.get(1, TimeUnit.MILLISECONDS);
-          logger.info("parquet_scan_pageData: clear: debugName: " + debugName + " f.get");
+         // logger.info("parquet_scan_pageData: clear: debugName: " + debugName + " f.get");
         }
       } catch (RuntimeException e) {
         // Do Nothing
@@ -322,14 +322,14 @@ class AsyncPageReader extends PageReader {
 
       } finally {
         time += 200;
-        logger.info("parquet_scan_pageData: counter: " + counter + " time: " + time);
+        //logger.info("parquet_scan_pageData: counter: " + counter + " time: " + time);
       }
     }
 
     //Empty the page queue
     ReadStatus r;
     while (!pageQueue.isEmpty()) {
-      logger.info("parquet_scan_pageData: empty page queue");
+      //logger.info("parquet_scan_pageData: empty page queue");
       r = null;
       try {
         r = pageQueue.poll();
@@ -452,14 +452,14 @@ class AsyncPageReader extends PageReader {
         PageHeader pageHeader = Util.readPageHeader(parent.dataReader);
         int compressedSize = pageHeader.getCompressed_page_size();
         if ( parent.parentColumnReader.isShuttingDown ) { return null; } //Opportunity to skip expensive Parquet processing
-        logger.info("parquet_scan_pageData: call: before getNext debugName: " + debugName + " compressedSize " +  compressedSize);
+        //logger.info("parquet_scan_pageData: call: before getNext debugName: " + debugName + " compressedSize " +  compressedSize);
         counter += 1;
         pageData = parent.dataReader.getNext(compressedSize);
         if(isClear) {
-          logger.info("parquet_scan_pageData: drill is in clear");
+          //logger.info("parquet_scan_pageData: drill is in clear");
           throw new InterruptedException("drill is in Clear");
         }
-        logger.info("parquet_scan_pageData: call: pageData = getNext debugName: " + debugName);
+        //logger.info("parquet_scan_pageData: call: pageData = getNext debugName: " + debugName);
         bytesRead = compressedSize;
 
         synchronized (parent) {
@@ -473,7 +473,7 @@ class AsyncPageReader extends PageReader {
           long timeToRead = timer.elapsed(TimeUnit.NANOSECONDS);
           readStatus.setPageHeader(pageHeader);
           readStatus.setPageData(pageData);
-          logger.info("parquet_scan_pageData: call: setPageData: debugName: " + debugName);
+          //logger.info("parquet_scan_pageData: call: setPageData: debugName: " + debugName);
           readStatus.setBytesRead(bytesRead);
           readStatus.setValuesRead(valuesRead);
           readStatus.setDiskScanTime(timeToRead);
@@ -495,9 +495,9 @@ class AsyncPageReader extends PageReader {
 //        logger.info("parquet_scan_pageData: call: InterruptedException: " + e.getMessage()
 //                + " debugName: " + debugName
 //                + " pageData is null: " + (pageData == null));
-        logger.info("parquet_scan_pageData: interruptedException");
+        //logger.info("parquet_scan_pageData: interruptedException");
         if (pageData != null) {
-          logger.info("parquet_scan_pageData: interrupted-pageData release");
+          //logger.info("parquet_scan_pageData: interrupted-pageData release");
           pageData.release();
         }
         Thread.currentThread().interrupt();
@@ -509,7 +509,7 @@ class AsyncPageReader extends PageReader {
 //                + " pageData is null: " + (pageData == null));
         parent.handleAndThrowException(e, "Exception occurred while reading from disk.");
       } finally {
-        logger.info("parquet_scan_pageData: call: finally");
+        //logger.info("parquet_scan_pageData: call: finally");
         counter -= 1;
         //Nothing to do if isShuttingDown.
     }

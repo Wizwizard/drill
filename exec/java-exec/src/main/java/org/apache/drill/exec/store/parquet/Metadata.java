@@ -198,6 +198,7 @@ public class Metadata {
   }
 
   private Metadata(FileSystem fs, ParquetFormatConfig formatConfig) {
+    logger.info("picasso session_bug Metadata: processUserName():" + ImpersonationUtil.getProcessUserName());
     this.fs = ImpersonationUtil.createFileSystem(ImpersonationUtil.getProcessUserName(), fs.getConf());
     this.formatConfig = formatConfig;
   }

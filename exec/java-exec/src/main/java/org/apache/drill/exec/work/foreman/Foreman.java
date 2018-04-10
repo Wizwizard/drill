@@ -18,12 +18,15 @@
 package org.apache.drill.exec.work.foreman;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.drill.common.CatastrophicFailure;
@@ -72,6 +75,7 @@ import org.apache.drill.exec.server.options.OptionManager;
 import org.apache.drill.exec.server.rest.WebUserConnection;
 import org.apache.drill.exec.store.dfs.FileSystemConfig;
 import org.apache.drill.exec.store.dfs.FileSystemPlugin;
+import org.apache.drill.exec.store.dfs.WorkspaceConfig;
 import org.apache.drill.exec.testing.ControlsInjector;
 import org.apache.drill.exec.testing.ControlsInjectorFactory;
 import org.apache.drill.exec.util.Pointer;
@@ -281,16 +285,22 @@ public class Foreman implements Runnable {
         final String sql = queryRequest.getPlan();
         //这里是处理describe
         try {
+            // TODO 这里的逻辑需要梳理一下
           if (AnalyzeSql.isDescribe(sql)) {
 //            String connection2 = ((FileSystemConfig)((FileSystemPlugin)drillbitContext.getStorage().getPlugin("hdfs")).getConfig()).connection;
-              String connection = "hadoop2-namenode:9000";
-            //logger.info("picasso: run: connection:" + connection);
+//            Map<String, WorkspaceConfig> workspaces =   ((FileSystemConfig)drillbitContext.getStorage().getPlugin("dfs").getConfig()).workspaces;
+//            StringBuilder sb = new StringBuilder();
+//            for(String key: workspaces.keySet()) {
+//              sb.append(key + " : " + workspaces.get(key).getLocation() + "\n");
+//            }
+            //logger.info("picasso run workspaces : " + sb);
+            //logger.info("picasso run workspaces.tmp " + workspaces.get("tmp").getLocation());
             if (initiatingClient instanceof WebUserConnection) {
               logger.info("picasso: run: WebUserConnection");
-              initiatingClient.sendData(ShowSchema.getSchema(AnalyzeSql.getPath(sql)));
+              initiatingClient.sendData(ShowSchema.getSchema(AnalyzeSql.getPath(sql, drillbitContext)));
             } else if (initiatingClient instanceof UserServer.BitToUserConnection) {
               logger.info("picasso: run: BitToUserConnection");
-              initiatingClient.sendData(responseListener, ShowSchema.getClientSchema(AnalyzeSql.getPath(sql), queryId));
+              initiatingClient.sendData(responseListener, ShowSchema.getClientSchema(AnalyzeSql.getPath(sql, drillbitContext), queryId));
 
               moveToState(QueryState.STARTING, null);
               moveToState(QueryState.RUNNING, null);
@@ -299,7 +309,10 @@ public class Foreman implements Runnable {
             break;
           }
         } catch (Exception e) {
-          logger.info("picasso: Foreman: describe_error: " + e.getMessage());
+          StringWriter sw = new StringWriter();
+          PrintWriter pw = new PrintWriter(sw);
+          e.printStackTrace(pw);
+          logger.info("picasso: Foreman: describe_error: \n" + sw);
           //e.printStackTrace();
         }
             // log query id and query text before starting any real work. Also, put
