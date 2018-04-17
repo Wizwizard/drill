@@ -54,7 +54,8 @@ public class LogInLogOutResources {
       throws Exception {
     if (AuthDynamicFeature.isUserLoggedIn(sc)) {
       // if the user is already login, forward the request to homepage.
-      request.getRequestDispatcher("/").forward(request, response);
+      // 跳转到query页面
+      request.getRequestDispatcher("/query").forward(request, response);
       return null;
     }
 
@@ -63,8 +64,11 @@ public class LogInLogOutResources {
       // is forwarded to the redirect page.
       final HttpSession session = request.getSession(true);
       final URI destURI = UriBuilder.fromUri(URLDecoder.decode(redirect, "UTF-8")).build();
+      // 设置登陆之后的跳转目录
       session.setAttribute(FormAuthenticator.__J_URI, destURI.toString());
+      System.out.println("picasso destUri: " + destURI);
     }
+    request.getSession(true).setAttribute(FormAuthenticator.__J_URI, "/query");
 
     return ViewableWithPermissions.createLoginPage(null);
   }

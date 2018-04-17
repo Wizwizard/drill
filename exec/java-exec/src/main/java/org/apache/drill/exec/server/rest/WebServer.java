@@ -192,6 +192,7 @@ public class WebServer implements AutoCloseable {
 
     final ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
     servletContextHandler.setErrorHandler(errorHandler);
+    // 这里设置的为根目录
     servletContextHandler.setContextPath("/");
 
 
@@ -251,6 +252,7 @@ public class WebServer implements AutoCloseable {
     SessionManager sessionManager = new HashSessionManager();
     // 这里设置session断连时间
     sessionManager.setMaxInactiveInterval(config.getInt(ExecConstants.HTTP_SESSION_MAX_IDLE_SECS));
+    // 设置SessionCookie的name防止串sesson
     ((HashSessionManager)sessionManager).setSessionCookie("JSESSIONID_" + UUID.randomUUID().toString().replace("-", ""));
 
     sessionManager.addEventListener(new HttpSessionListener() {

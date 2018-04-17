@@ -31,7 +31,7 @@ public class QueryDataBatch {
   private final AtomicBoolean released = new AtomicBoolean(false);
 
   public QueryDataBatch(QueryData header, DrillBuf data) {
-    logger.info("New Result Batch with header {} and data {}", header, data);
+    logger.debug("New Result Batch with header {} and data {}", header, data);
     this.header = header;
     this.data = data;
     if (this.data != null) {

@@ -19,14 +19,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <script src="/static/js/jquery-3.2.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.js"></script>
-    <link href="/static/css/main.d557dfac.css" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116455927-1"></script>
+    <link href="/static/css/main.d36c4d4d.css" rel="stylesheet">
 </#macro>
 
 <#macro page_body>
   <a href="/queries">back</a><br/>
    <noscript>You need to enable JavaScript to run this app.</noscript>
    <div id="root"></div>
-   <script type="text/javascript" src="/static/js/main.0f4ce652.js"></script>
+   <script type="text/javascript" src="/static/js/main.4b14c6fc.js"></script>
 </#macro>
 
 <@page_html/>

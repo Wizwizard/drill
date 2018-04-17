@@ -18,6 +18,7 @@
 package org.apache.drill.exec.server.rest.auth;
 
 import org.apache.drill.exec.ExecConstants;
+import org.apache.drill.exec.expand.HttpClientUtils.UserAuth;
 import org.apache.drill.exec.rpc.security.AuthenticatorFactory;
 import org.apache.drill.exec.rpc.security.plain.PlainFactory;
 import org.apache.drill.exec.rpc.user.security.UserAuthenticationException;
@@ -70,12 +71,19 @@ public class DrillRestLoginService implements LoginService {
     try {
       // Authenticate WebUser locally using UserAuthenticator. If WebServer is started that guarantees the PLAIN
       // mechanism is configured and authenticator is also available
+      // picasso
+      // start
       final AuthenticatorFactory plainFactory = drillbitContext.getAuthProvider()
           .getAuthenticatorFactory(PlainFactory.SIMPLE_NAME);
       final UserAuthenticator userAuthenticator = ((PlainFactory) plainFactory).getAuthenticator();
 
       // Authenticate the user with configured Authenticator
       userAuthenticator.authenticate(username, credentials.toString());
+      // end
+
+      // picasso add
+      //UserAuth.tokenAuth(username, credentials.toString());
+
 
       logger.debug("WebUser {} is successfully authenticated", username);
 

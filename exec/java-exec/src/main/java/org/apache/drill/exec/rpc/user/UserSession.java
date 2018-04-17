@@ -121,6 +121,9 @@ public class UserSession implements AutoCloseable {
     }
 
     public UserSession build() {
+      logger.info("picasso session_bug sessionId:" + userSession.sessionId);
+      logger.info("picasso session_bug username:" + userSession.getCredentials().getUserName());
+
       if (userSession.properties.containsKey(DrillProperties.QUOTING_IDENTIFIERS)) {
         if (userSession.sessionOptions != null) {
           userSession.setSessionOption(PlannerSettings.QUOTING_IDENTIFIERS_KEY,

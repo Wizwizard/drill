@@ -176,6 +176,7 @@ public class DrillRestServer extends ResourceConfig {
     @Override
     public WebUserConnection provide() {
       final HttpSession session = request.getSession();
+      //session.setAttribute("org.eclipse.jetty.security.form_URI", "/query");
       final Principal sessionUserPrincipal = request.getUserPrincipal();
 
       // If there is no valid principal this means user is not logged in yet.

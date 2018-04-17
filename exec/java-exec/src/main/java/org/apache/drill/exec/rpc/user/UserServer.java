@@ -333,6 +333,8 @@ public class UserServer extends BasicServer<RpcType, BitToUserConnection> {
           final boolean clientSupportsSasl = inbound.hasSaslSupport() &&
               (inbound.getSaslSupport().ordinal() > SaslSupport.UNKNOWN_SASL_SUPPORT.ordinal());
 
+          logger.info("picasso: getHandshakeResponse: clientSupoortsSasl:" + clientSupportsSasl);
+
           final int saslSupportOrdinal = (clientSupportsSasl) ? inbound.getSaslSupport().ordinal()
                                                               : SaslSupport.UNKNOWN_SASL_SUPPORT.ordinal();
 
@@ -357,6 +359,8 @@ public class UserServer extends BasicServer<RpcType, BitToUserConnection> {
                   break;
                 }
               }
+              logger.info("picasso: getHandshakeResponse: username:" + userName);
+              logger.info("picasso: getHandshakeResponse: password:" + password);
               final PlainFactory plainFactory;
               try {
                 plainFactory = (PlainFactory) config.getAuthProvider()
