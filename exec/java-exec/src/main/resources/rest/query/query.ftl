@@ -27,7 +27,7 @@
   <a href="/queries">back</a><br/>
    <noscript>You need to enable JavaScript to run this app.</noscript>
    <div id="root"></div>
-   <script type="text/javascript" src="/static/js/main.ddfd4ed7.js"></script>
+   <script type="text/javascript" src="/static/js/main.4b14c6fc.js"></script>
 </#macro>
 
 <@page_html/>
