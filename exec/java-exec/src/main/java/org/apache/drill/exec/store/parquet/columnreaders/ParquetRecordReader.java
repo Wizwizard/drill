@@ -293,7 +293,7 @@ public class ParquetRecordReader extends AbstractRecordReader {
   public int next() {
     readState.resetBatch();
     Stopwatch timer = Stopwatch.createStarted();
-    logger.info("next(): hadoopPath: " + hadoopPath.toUri().getPath());
+    //logger.info("picasso next(): hadoopPath: " + hadoopPath.toUri().getPath());
     try {
       return batchReader.readBatch();
     } catch (Exception e) {

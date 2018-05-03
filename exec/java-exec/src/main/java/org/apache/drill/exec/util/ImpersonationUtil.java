@@ -48,6 +48,7 @@ public class ImpersonationUtil {
       .build(new CacheLoader<Key, UserGroupInformation>() {
         @Override
         public UserGroupInformation load(Key key) throws Exception {
+          logger.info("picasso session_bug proxyUsername:" + key.proxyUserName + " loginUSer:" + key.loginUser);
           return UserGroupInformation.createProxyUser(key.proxyUserName, key.loginUser);
         }
       });
@@ -134,6 +135,7 @@ public class ImpersonationUtil {
    * @return
    */
   public static UserGroupInformation createProxyUgi(String proxyUserName) {
+    logger.info("picasso session_bug createProxyUgi: proxyUserName:" + proxyUserName);
     try {
       if (Strings.isNullOrEmpty(proxyUserName)) {
         throw new DrillRuntimeException("Invalid value for proxy user name");
@@ -211,6 +213,7 @@ public class ImpersonationUtil {
   /** Helper method to create DrillFileSystem */
   private static DrillFileSystem createFileSystem(UserGroupInformation proxyUserUgi, final Configuration fsConf,
       final OperatorStats stats) {
+    logger.info("picasso: createFileSystem: shortName:" + proxyUserUgi.getShortUserName() + " currentUser:" + proxyUserUgi.getUserName());
     DrillFileSystem fs;
     try {
       fs = proxyUserUgi.doAs(new PrivilegedExceptionAction<DrillFileSystem>() {
