@@ -71,6 +71,8 @@ import org.apache.drill.exec.work.foreman.rm.QueryResourceManager;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -264,20 +266,27 @@ public class Foreman implements Runnable {
         final String sql = queryRequest.getPlan();
         // log query id and query text before starting any real work. Also, put
         // them together such that it is easy to search based on query id
-        // TODO describe
         logger.info("Query text for query id {}: {}", this.queryIdString, sql);
         // picasso add: describe parquet
         try {
+          // TODO 这里的逻辑需要梳理一下
           if (AnalyzeSql.isDescribe(sql)) {
             if (initiatingClient instanceof WebUserConnection) {
-              initiatingClient.sendData(ShowSchema.getSchema(AnalyzeSql.getPath(sql)));
+              initiatingClient.sendData(ShowSchema.getSchema(AnalyzeSql.getPath(sql, drillbitContext)));
             } else if (initiatingClient instanceof UserServer.BitToUserConnection) {
-              initiatingClient.sendData(responseListener, ShowSchema.getClientSchema(AnalyzeSql.getPath(sql), queryId));
+              initiatingClient.sendData(responseListener, ShowSchema.getClientSchema(AnalyzeSql.getPath(sql, drillbitContext), queryId));
+
+              queryStateProcessor.moveToState(QueryState.STARTING, null);
+              queryStateProcessor.moveToState(QueryState.RUNNING, null);
+              queryStateProcessor.moveToState(QueryState.COMPLETED, null);
             }
             break;
           }
         } catch (Exception e) {
-          logger.info("picasso: Foreman: describe_error: " + e.getMessage());
+          StringWriter sw = new StringWriter();
+          PrintWriter pw = new PrintWriter(sw);
+          e.printStackTrace(pw);
+          logger.info("picasso: Foreman: describe_error: \n" + sw);
         }
         runSQL(sql);
         break;

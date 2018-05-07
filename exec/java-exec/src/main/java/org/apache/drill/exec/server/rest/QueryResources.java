@@ -317,7 +317,7 @@ public class QueryResources {
     @Override
     public void process(WatchedEvent watchedEvent) {
 
-      System.out.println("Receive watched event: " + watchedEvent);
+      //System.out.println("Receive watched event: " + watchedEvent);
       if (Event.KeeperState.SyncConnected == watchedEvent.getState()) {
         connectedSemaphore.countDown();
       }

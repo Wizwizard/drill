@@ -26,6 +26,9 @@ public final class WebServerConstants {
 
   public static final String REDIRECT_QUERY_PARM = "redirect";
   public static final String WEBSERVER_ROOT_PATH = "/";
+  //picasso add
+  public static final String QUERY_PATH = "/query";
+  public static final String LOGIN_PATH = "/login";
 
   // Main Login page which help to choose between Form and Spnego authentication
   public static final String MAIN_LOGIN_RESOURCE_NAME = "mainLogin";

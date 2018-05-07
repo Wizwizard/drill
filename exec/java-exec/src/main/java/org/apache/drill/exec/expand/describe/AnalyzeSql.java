@@ -18,6 +18,12 @@
 package org.apache.drill.exec.expand.describe;
 
 
+import org.apache.drill.exec.server.DrillbitContext;
+import org.apache.drill.exec.store.dfs.FileSystemConfig;
+import org.apache.drill.exec.store.dfs.WorkspaceConfig;
+
+import java.util.Map;
+
 /**
  * Created by bingxing.wang on 2018/3/7.
  */
@@ -31,9 +37,24 @@ public class AnalyzeSql {
 
     // 当前仅限获取hdfs地址
     // 地址格式为 `/....`
-    public static String getPath(String sql){
-        String path = sql.substring(sql.indexOf("`") + 1);
-         path = path.replace("\n", "").trim().replaceAll(" +", " ").split(" ")[1].replace("`", "");
+    public static String getPath(String sql, DrillbitContext drillbitContext) throws Exception{
+        String path = sql.replace("\n", "").trim().replaceAll(" +", " ").split(" ")[1];
+        String[] paths = path.split("`");
+        String[] workspace = paths[0].split("\\.");
+        String location = ((FileSystemConfig)drillbitContext.getStorage().
+                getPlugin(workspace[0]).
+                getConfig()).workspaces.
+                get(workspace[1]).
+                getLocation();
+
+        if(!paths[1].startsWith("/")){
+            path = "/" + paths[1];
+        } else {
+            path = paths[1];
+        }
+
+        path = (location + path).replace("//", "/");
+
         logger.info("picasso: getPath: path:" + path);
         return path;
     }

@@ -81,12 +81,16 @@ public class LogInLogOutResources {
                                @QueryParam(WebServerConstants.REDIRECT_QUERY_PARM) String redirect) throws Exception {
 
     if (AuthDynamicFeature.isUserLoggedIn(sc)) {
-      // if the user is already login, forward the request to homepage.
-      request.getRequestDispatcher(WebServerConstants.WEBSERVER_ROOT_PATH).forward(request, response);
+      // picasso add
+      // if the user is already login, forward the request to query_page.
+      request.getRequestDispatcher(WebServerConstants.QUERY_PATH).forward(request, response);
       return null;
     }
 
-    updateSessionRedirectInfo(redirect, request);
+    // drill original
+    //updateSessionRedirectInfo(redirect, request);
+    // picasso add
+    request.getSession(true).setAttribute(FormAuthenticator.__J_URI, "/query");
     return ViewableWithPermissions.createLoginPage(null);
   }
 
@@ -123,7 +127,9 @@ public class LogInLogOutResources {
       session.invalidate();
     }
 
-    req.getRequestDispatcher(WebServerConstants.WEBSERVER_ROOT_PATH).forward(req, resp);
+    // picasso edit
+    // root -> login
+    req.getRequestDispatcher(WebServerConstants.LOGIN_PATH).forward(req, resp);
   }
 
   @GET

@@ -640,6 +640,7 @@ public class DrillClient implements Closeable, ConnectionThrottle {
     if (Strings.isNullOrEmpty(userName)) {
       userName = "anonymous"; // if username is not propagated as one of the properties
     }
+    logger.info("picasso/getUserCredentials userName:" + userName);
     return UserBitShared.UserCredentials.newBuilder()
       .setUserName(userName)
       .build();

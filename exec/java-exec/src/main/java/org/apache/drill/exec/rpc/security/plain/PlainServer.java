@@ -84,6 +84,7 @@ class PlainServer implements SaslServer {
       authorizationID = authenticationID;
     }
 
+    //picasso authClient
     try {
       authenticator.authenticate(authenticationID, password);
     } catch (final UserAuthenticationException e) {

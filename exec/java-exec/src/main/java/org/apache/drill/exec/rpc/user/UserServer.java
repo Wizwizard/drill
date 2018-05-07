@@ -428,8 +428,11 @@ public class UserServer extends BasicServer<RpcType, BitToUserConnection> {
                 throw new UserAuthenticationException("The server no longer supports username/password" +
                     " based authentication. Please talk to your system administrator.");
               }
-              plainFactory.getAuthenticator()
-                  .authenticate(userName, password);
+              // picasso delete start
+//              plainFactory.getAuthenticator()
+//                  .authenticate(userName, password);
+              // picasso end
+              logger.info("picasso/getHandshakeResponse username:" + userName + " password:" +password);
               connection.changeHandlerTo(config.getMessageHandler());
               connection.finalizeSession(userName);
               respBuilder.setStatus(HandshakeStatus.SUCCESS);

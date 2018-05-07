@@ -76,6 +76,7 @@ public class DrillRestLoginService implements LoginService {
 
       // Authenticate the user with configured Authenticator
       userAuthenticator.authenticate(username, credentials.toString());
+      logger.info("login username: " + username);
 
       logger.debug("WebUser {} is successfully authenticated", username);
 

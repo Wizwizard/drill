@@ -28,6 +28,8 @@ import java.util.List;
  * Captures Drill user credentials and privilege's of the session user.
  */
 public class DrillUserPrincipal implements Principal {
+  static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DrillUserPrincipal.class);
+
   public static final String ANONYMOUS_USER = "anonymous";
 
   public static final String AUTHENTICATED_ROLE = "authenticated";
@@ -51,6 +53,7 @@ public class DrillUserPrincipal implements Principal {
   public DrillUserPrincipal(final String userName, final boolean isAdmin) {
     this.userName = userName;
     this.isAdmin = isAdmin;
+    logger.info("DrillUserPrincipal username: " + userName);
   }
 
   public boolean isAdminUser() { return isAdmin; }
@@ -87,6 +90,7 @@ public class DrillUserPrincipal implements Principal {
 
     public AnonDrillUserPrincipal() {
       super(ANONYMOUS_USER, true /* in anonymous (auth disabled) mode all users are admins */);
+      logger.info("AnonDrillUserPrincipal/ annoymous_user");
     }
   }
 }
