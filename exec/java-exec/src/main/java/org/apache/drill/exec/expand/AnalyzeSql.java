@@ -30,6 +30,7 @@ import java.util.Map;
 public class AnalyzeSql {
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AnalyzeSql.class);
+    // 判别是否是describe命令
     public static boolean isDescribe(String sql){
         String s = sql.replace("\n", "").trim().toLowerCase();
         return s.startsWith("describe");
